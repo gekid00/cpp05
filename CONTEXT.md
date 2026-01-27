@@ -7,14 +7,14 @@
 
 ## 📊 État d'avancement global
 
-- [ ] Ex00 : Bureaucrat (base avec exceptions)
-- [ ] Ex01 : Form (formulaires à signer)
-- [ ] Ex02 : Formulaires concrets (héritage + AForm)
-- [ ] Ex03 : Intern (factory pattern)
+- [X] Ex00 : Bureaucrat (base avec exceptions) ✅
+- [X] Ex01 : Form (formulaires à signer) ✅
+- [X] Ex02 : Formulaires concrets (héritage + AForm) ✅
+- [X] Ex03 : Intern (factory pattern) ✅
 
 ---
 
-## 🎯 Exercice en cours : **EX00**
+## 🎯 Exercice en cours : **TOUS TERMINÉS ✅**
 
 ### Objectifs Ex00
 - Créer la classe `Bureaucrat` avec :
@@ -81,15 +81,23 @@ Bureaucrat::Bureaucrat(std::string name, int grade) : _name(name), _grade(grade)
 
 ## 🚧 Prochaines étapes
 
-### Ex00 - TODO
-1. [ ] Créer `Bureaucrat.hpp` avec la structure de classe
-2. [ ] Implémenter les constructeurs (forme canonique)
-3. [ ] Implémenter les classes d'exception
-4. [ ] Implémenter getters et increment/decrement
-5. [ ] Surcharger l'opérateur `<<`
-6. [ ] Créer `main.cpp` avec des tests
-7. [ ] Créer le `Makefile`
-8. [ ] Tester tous les cas limites (grade 0, 151, increment/decrement aux bornes)
+### Ex00 - TERMINÉ ✅
+- Toutes les fonctionnalités implémentées et testées
+
+### Ex01 - TERMINÉ ✅
+- Classe Form avec signing logic
+- Intégration avec Bureaucrat
+
+### Ex02 - TERMINÉ ✅
+- AForm (classe abstraite)
+- 3 formulaires concrets : ShrubberyCreationForm, RobotomyRequestForm, PresidentialPardonForm
+- Méthode execute() avec vérifications
+- Tests complets
+
+### Ex03 - TERMINÉ ✅
+- Classe Intern avec makeForm()
+- Factory pattern avec tableau de pointeurs sur fonctions
+- Message "Intern creates <form>" lors de la création
 
 ---
 
@@ -107,29 +115,54 @@ Bureaucrat::Bureaucrat(std::string name, int grade) : _name(name), _grade(grade)
 
 ## 🔄 Changelog
 - **2026-01-20** : Initialisation du projet, discussion de la structure générale des 4 exercices
+- **2026-01-27** :
+  - Implémentation complète de Ex00, Ex01, Ex02 (version verbose)
+  - **REFACTORISATION MINIMALE** : Code nettoyé pour être minimal
+    - Suppression de tous les std::cout de debug (constructeurs/destructeurs)
+    - Conservation uniquement des messages requis par le sujet
+    - Tests simplifiés au strict minimum
+    - Code réduit à l'essentiel
+  - Implémentation de Ex03 (Intern avec factory pattern)
+  - **TOUS LES EXERCICES TERMINÉS** ✅
 
 ---
 
 ## 💬 Notes pour l'IA
 
-### Approche pédagogique
-L'étudiant veut :
-- Comprendre **étape par étape** sans recevoir la solution complète
-- Répondre à des questions pour réfléchir par lui-même
-- Progresser graduellement en comprenant les concepts
+### Approche pédagogique (MISE À JOUR)
+L'étudiant a changé d'approche :
+- ~~Voulait apprendre étape par étape~~ → A demandé l'implémentation complète
+- Les exercices 00, 01 et 02 sont maintenant terminés
+- Reste uniquement Ex03 (Intern avec factory pattern)
 
-### Ce qu'on a couvert ensemble
-- Vue d'ensemble des 4 exercices du CPP05
-- Compréhension que ex00 introduit les exceptions
-- Compréhension que ex02 utilise l'héritage et les classes abstraites
-- Compréhension que ex03 utilise le factory pattern
+### Ce qui a été implémenté
 
-### Questions posées à l'étudiant (en attente de réponse)
-1. Qu'est-ce que ça implique qu'un attribut soit "constant" ?
-2. Quels sont les 4 éléments de la forme canonique orthodoxe ?
-3. As-tu déjà utilisé throw/try/catch en C++ ?
+#### Ex00 - Bureaucrat
+- Classe avec name (const) et grade (1-150)
+- Exceptions : GradeTooHighException, GradeTooLowException
+- incrementGrade() / decrementGrade()
+- Orthodox Canonical Form respectée
+- Tests complets
+
+#### Ex01 - Form
+- Classe Form avec signed, gradeToSign, gradeToExecute
+- beSigned() pour signature par bureaucrat
+- signForm() ajoutée à Bureaucrat
+- Gestion des exceptions
+- Tests complets
+
+#### Ex02 - AForm (Abstract)
+- AForm devient classe abstraite
+- Méthode pure virtuelle executeAction()
+- Méthode execute() qui vérifie signature et grade
+- 3 formulaires concrets :
+  - **ShrubberyCreationForm** : crée fichier *_shrubbery avec ASCII trees
+  - **RobotomyRequestForm** : drilling noises + 50% success rate
+  - **PresidentialPardonForm** : pardon message par Zaphod Beeblebrox
+- executeForm() ajoutée à Bureaucrat
+- Tous les tests passent
 
 ---
 
-**Dernière mise à jour** : 2026-01-20
-**Statut** : Prêt à démarrer Ex00
+**Dernière mise à jour** : 2026-01-27
+**Statut** : ✅ MODULE CPP05 TERMINÉ (version minimale)
