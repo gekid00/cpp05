@@ -1,0 +1,271 @@
+================================================================================
+CPP MODULE 05 - EXCEPTIONS ET HÉRITAGE
+================================================================================
+
+RÈGLES GÉNÉRALES C++
+====================
+
+Compilation:
+- c++ avec flags: -Wall -Wextra -Werror -std=c++98
+
+Conventions:
+- Dossiers: ex00, ex01, ex02, ex03
+- Classes: UpperCamelCase (ex: Bureaucrat)
+- Fichiers: ClassName.hpp, ClassName.cpp
+- Tous les messages se terminent par \n et vont sur stdout
+
+Interdictions:
+- C++11 et versions ultérieures
+- Boost libraries
+- *printf(), *alloc(), free()
+- using namespace <ns_name>
+- friend keyword
+- STL (containers/algorithms) - pas avant Module 08
+- Fonctions dans les headers (sauf templates)
+- Double inclusion
+
+Obligatoire:
+- Orthodox Canonical Form pour toutes les classes
+- Include guards
+- Pas de memory leaks
+- Chaque header doit être utilisable indépendamment
+
+================================================================================
+EX00: Mommy, when I grow up, I want to be a bureaucrat!
+================================================================================
+
+Directory: ex00/
+Files: Makefile, main.cpp, Bureaucrat.hpp, Bureaucrat.cpp
+
+Classe Bureaucrat:
+- Attribut: const std::string _name (nom constant)
+- Attribut: int _grade (grade de 1 à 150)
+  * 1 = meilleur
+  * 150 = pire
+
+Constructeur:
+- Bureaucrat(const std::string &name, int grade)
+- Lance GradeTooHighException si grade < 1
+- Lance GradeTooLowException si grade > 150
+
+Exceptions:
+- GradeTooHighException (hérite de std::exception, redéfinit what())
+- GradeTooLowException (hérite de std::exception, redéfinit what())
+- Note: Les classes d'exception ne doivent PAS être en Orthodox Canonical Form
+
+Getters:
+- const std::string &getName() const
+- int getGrade() const
+
+Fonctions membres:
+- void incrementGrade()
+  * Décrémente le grade de 1 (grade 3 -> grade 2)
+  * Lance GradeTooHighException si grade < 1
+- void decrementGrade()
+  * Incrémente le grade de 1 (grade 3 -> grade 4)
+  * Lance GradeTooLowException si grade > 150
+
+Opérateur:
+- operator<< pour afficher:
+  * Format: "<name>, bureaucrat grade <grade>."
+
+Tests:
+- main.cpp avec tests suffisants pour prouver le fonctionnement
+- Utiliser try/catch(std::exception &e)
+
+================================================================================
+EX01: Form up, maggots!
+================================================================================
+
+Directory: ex01/
+Files: ex00/ files + Form.hpp, Form.cpp
+
+Classe Form:
+- Attributs privés:
+  * const std::string _name
+  * bool _signed (false au départ)
+  * const int _gradeToSign (grade requis pour signer)
+  * const int _gradeToExec (grade requis pour exécuter)
+
+Constructeur:
+- Form(const std::string &name, int gradeToSign, int gradeToExec)
+- Lance GradeTooHighException si grade < 1
+- Lance GradeTooLowException si grade > 150
+
+Exceptions:
+- Form::GradeTooHighException
+- Form::GradeTooLowException
+
+Getters:
+- const std::string &getName() const
+- bool isSigned() const
+- int getGradeToSign() const
+- int getGradeToExec() const
+
+Fonctions membres:
+- void beSigned(const Bureaucrat &bureaucrat)
+  * Change _signed à true si bureaucrat.getGrade() >= gradeToSign
+  * Lance GradeTooLowException si grade trop bas
+  * Note: grade 1 est PLUS HAUT que grade 2
+
+Opérateur:
+- operator<< pour afficher TOUS les infos du Form
+
+Bureaucrat (modification):
+- void signForm(const Form &form)
+  * Appelle form.beSigned(*this)
+  * Si succès: affiche "<bureaucrat> signed <form>"
+  * Si échec: affiche "<bureaucrat> couldn't sign <form> because <reason>."
+
+Tests:
+- main.cpp avec tests suffisants
+
+================================================================================
+EX02: No, you need form 28B, not 28C...
+================================================================================
+
+Directory: ex02/
+Files: Makefile, main.cpp, Bureaucrat.hpp, Bureaucrat.cpp,
+       AForm.hpp, AForm.cpp, ShrubberyCreationForm.hpp, ShrubberyCreationForm.cpp,
+       RobotomyRequestForm.hpp, RobotomyRequestForm.cpp,
+       PresidentialPardonForm.hpp, PresidentialPardonForm.cpp
+
+IMPORTANT: Form devient AForm (abstract class)
+- Les attributs restent PRIVÉS dans la classe de base
+- Toutes les classes doivent être en Orthodox Canonical Form
+
+Classe AForm (renommée de Form):
+- Abstract (au moins une fonction virtuelle pure)
+- Attributs privés:
+  * const std::string _name
+  * bool _signed
+  * const int _gradeToSign
+  * const int _gradeToExec
+
+Fonctions virtuelles:
+- virtual void execute(const Bureaucrat &executor) const = 0;
+  * Doit vérifier que le formulaire est signé
+  * Doit vérifier que le grade du Bureaucrat est suffisant
+  * Lance une exception appropriée sinon
+  * Deux approches valides:
+    1. Vérifications dans chaque sous-classe
+    2. Vérifications dans AForm, puis appel d'une autre fonction virtuelle
+
+Getters & Setters: idem EX01
+
+Opérateur: idem EX01
+
+ShrubberyCreationForm:
+- Hérite de AForm
+- Grades: 145 pour signer, 137 pour exécuter
+- Constructeur: prend un target (std::string)
+- Nomme automatiquement: "ShrubberyCreationForm"
+- execute():
+  * Crée fichier: <target>_shrubbery
+  * Écrit un ASCII tree dedans
+
+RobotomyRequestForm:
+- Hérite de AForm
+- Grades: 72 pour signer, 45 pour exécuter
+- Constructeur: prend un target (std::string)
+- Nomme automatiquement: "RobotomyRequestForm"
+- execute():
+  * Affiche du bruit de forage: "Drrrr... Whirrrr..."
+  * 50% du temps: affiche "<target> has been robotomized successfully"
+  * 50% du temps: affiche "<target> robotomy failed"
+
+PresidentialPardonForm:
+- Hérite de AForm
+- Grades: 25 pour signer, 5 pour exécuter
+- Constructeur: prend un target (std::string)
+- Nomme automatiquement: "PresidentialPardonForm"
+- execute():
+  * Affiche: "<target> has been pardoned by Zaphod Beeblebrox."
+
+Bureaucrat (modifications):
+- void executeForm(const AForm &form) const
+  * Essaie d'exécuter le formulaire
+  * Si succès: affiche "<bureaucrat> executed <form>"
+  * Si échec: affiche un message d'erreur explicite
+
+Tests:
+- main.cpp avec tests suffisants
+
+================================================================================
+EX03: At least this beats coffee-making
+================================================================================
+
+Directory: ex03/
+Files: ex02/ files + Intern.hpp, Intern.cpp
+
+Classe Intern:
+- Pas de name
+- Pas de grade
+- Pas de caractéristiques uniques
+- Orthodox Canonical Form
+
+Fonction principale:
+- AForm *makeForm(const std::string &formName, const std::string &target) const
+  * Retourne un pointeur vers une instance d'AForm
+  * Prend le nom du formulaire et le target
+  * Affiche: "Intern creates <formName>"
+  * Si le formulaire n'existe pas: affiche un message d'erreur explicite
+  * Retourne NULL si erreur (ou un pointeur invalide)
+
+IMPORTANT: Pas d'if/elseif/else massif!
+- Utiliser un tableau de pointeurs vers des fonctions membres
+- Ou une approche élégante et lisible
+
+Exemples de formules:
+- "shrubbery creation" -> ShrubberyCreationForm
+- "robotomy request" -> RobotomyRequestForm
+- "presidential pardon" -> PresidentialPardonForm
+
+Tests:
+- main.cpp avec tests suffisants
+
+================================================================================
+CHECKLIST D'ÉVALUATION
+================================================================================
+
+EX00:
+[✓] Makefile compile avec flags corrects
+[✓] Classe Bureaucrat avec _name et _grade
+[✓] Grades 1-150 avec exceptions
+[✓] Getters
+[✓] incrementGrade/decrementGrade
+[✓] Exceptions héritent de std::exception
+[✓] Opérateur <<
+[✓] Pas de memory leaks
+[✓] main.cpp avec tests
+
+EX01:
+[✓] Makefile
+[✓] Classe Form avec tous les attributs privés
+[✓] Grades constants
+[✓] Getters
+[✓] beSigned()
+[✓] signForm() dans Bureaucrat
+[✓] Opérateur <<
+[✓] main.cpp avec tests
+
+EX02:
+[✓] Makefile
+[✓] AForm (abstract class)
+[✓] Attributs privés dans AForm
+[✓] 3 classes concrètes avec grades corrects
+[✓] Constructeur: un seul paramètre (target)
+[✓] execute() avec vérifications
+[✓] executeForm() dans Bureaucrat
+[✓] Pas de memory leaks
+[✓] main.cpp avec tests
+
+EX03:
+[✓] Makefile
+[✓] Classe Intern
+[✓] makeForm() avec approche élégante (pas d'if/elseif massif)
+[✓] Affichage "Intern creates"
+[✓] Message d'erreur si formulaire invalide
+[✓] main.cpp avec tests
+
+================================================================================
