@@ -1,38 +1,49 @@
 #include "Bureaucrat.hpp"
+#include "AForm.hpp"
+#include "ShrubberyCreationForm.hpp"
+#include "RobotomyRequestForm.hpp"
+#include "PresidentialPardonForm.hpp"
 #include "Intern.hpp"
 
-int main()
+int main(void)
 {
-	Intern intern;
-	Bureaucrat boss("Boss", 1);
+	Intern someIntern;
+	AForm* form;
 
-	AForm* rrf = intern.makeForm("robotomy request", "Bender");
-	if (rrf)
+	std::cout << "=== Test 1: Create ShrubberyCreationForm ===" << std::endl;
+	form = someIntern.makeForm("shrubbery creation", "garden");
+	if (form)
 	{
-		boss.signForm(*rrf);
-		boss.executeForm(*rrf);
-		delete rrf;
+		Bureaucrat bob("Bob", 100);
+		bob.signForm(*form);
+		bob.executeForm(*form);
+		delete form;
 	}
 
-	AForm* scf = intern.makeForm("shrubbery creation", "home");
-	if (scf)
+	std::cout << "\n=== Test 2: Create RobotomyRequestForm ===" << std::endl;
+	form = someIntern.makeForm("robotomy request", "Marvin");
+	if (form)
 	{
-		boss.signForm(*scf);
-		boss.executeForm(*scf);
-		delete scf;
+		Bureaucrat alice("Alice", 40);
+		alice.signForm(*form);
+		alice.executeForm(*form);
+		delete form;
 	}
 
-	AForm* ppf = intern.makeForm("presidential pardon", "Arthur");
-	if (ppf)
+	std::cout << "\n=== Test 3: Create PresidentialPardonForm ===" << std::endl;
+	form = someIntern.makeForm("presidential pardon", "Ford");
+	if (form)
 	{
-		boss.signForm(*ppf);
-		boss.executeForm(*ppf);
-		delete ppf;
+		Bureaucrat charlie("Charlie", 1);
+		charlie.signForm(*form);
+		charlie.executeForm(*form);
+		delete form;
 	}
 
-	AForm* invalid = intern.makeForm("invalid form", "target");
-	if (invalid)
-		delete invalid;
+	std::cout << "\n=== Test 4: Invalid form name ===" << std::endl;
+	form = someIntern.makeForm("invalid form", "target");
+	if (!form)
+		std::cout << "Form creation failed as expected" << std::endl;
 
-	return 0;
+	return (0);
 }

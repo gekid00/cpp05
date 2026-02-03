@@ -1,22 +1,26 @@
-NAME		= intern
+NAME = form
 
-CC			= c++
-CFLAGS		= -Wall -Wextra -Werror -std=c++98
+CXX = c++
 
-SRCS		= main.cpp Bureaucrat.cpp AForm.cpp Intern.cpp \
-			  ShrubberyCreationForm.cpp RobotomyRequestForm.cpp PresidentialPardonForm.cpp
-OBJS		= $(SRCS:.cpp=.o)
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98
+
+SRCS =	main.cpp \
+		Bureaucrat.cpp \
+		AForm.cpp \
+		ShrubberyCreationForm.cpp \
+		RobotomyRequestForm.cpp \
+		PresidentialPardonForm.cpp \
+		Intern.cpp
+
+OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
 
 clean:
-	rm -f $(OBJS) *_shrubbery
+	rm -f $(OBJS)
 
 fclean: clean
 	rm -f $(NAME)

@@ -1,33 +1,47 @@
 #include "Bureaucrat.hpp"
 #include "Form.hpp"
 
-int main()
+int main(void)
 {
-	try {
-		Bureaucrat alice("Alice", 30);
-		Form form("Tax Form", 50, 25);
+	try
+	{
+		Bureaucrat alice("Alice", 50);
+		Form form1("TaxForm", 100, 50);
 
-		std::cout << form << std::endl;
-		alice.signForm(form);
-		std::cout << form << std::endl;
-	} catch (std::exception& e) {
-		std::cout << e.what() << std::endl;
+		std::cout << alice << std::endl;
+		std::cout << form1 << std::endl;
+
+		alice.signForm(form1);
+		std::cout << form1 << std::endl;
+	}
+	catch (std::exception &e)
+	{
+		std::cout << "Error: " << e.what() << std::endl;
 	}
 
-	try {
-		Bureaucrat bob("Bob", 100);
-		Form form("High Level Form", 50, 25);
+	try
+	{
+		Bureaucrat bob("Bob", 150);
+		Form form2("ImportantForm", 100, 50);
 
-		bob.signForm(form);
-	} catch (std::exception& e) {
-		std::cout << e.what() << std::endl;
+		std::cout << "\n" << bob << std::endl;
+		std::cout << form2 << std::endl;
+
+		bob.signForm(form2);
+	}
+	catch (std::exception &e)
+	{
+		std::cout << "Error: " << e.what() << std::endl;
 	}
 
-	try {
-		Form invalidForm("Invalid", 0, 50);
-	} catch (std::exception& e) {
-		std::cout << e.what() << std::endl;
+	try
+	{
+		Form badForm("BadForm", 0, 50);
+	}
+	catch (std::exception &e)
+	{
+		std::cout << "\nError creating form: " << e.what() << std::endl;
 	}
 
-	return 0;
+	return (0);
 }

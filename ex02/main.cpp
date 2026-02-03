@@ -1,35 +1,50 @@
 #include "Bureaucrat.hpp"
+#include "AForm.hpp"
 #include "ShrubberyCreationForm.hpp"
 #include "RobotomyRequestForm.hpp"
 #include "PresidentialPardonForm.hpp"
 
-int main()
+int main(void)
 {
-	try {
-		Bureaucrat boss("Boss", 1);
-		ShrubberyCreationForm s("home");
-		RobotomyRequestForm r("Bender");
-		PresidentialPardonForm p("Arthur");
+    try
+    {
+        Bureaucrat alice("Alice", 50);
+        ShrubberyCreationForm shrub("garden");
 
-		boss.signForm(s);
-		boss.executeForm(s);
+        std::cout << alice << std::endl;
+        std::cout << shrub << std::endl;
 
-		boss.signForm(r);
-		boss.executeForm(r);
+        alice.signForm(shrub);
+        alice.executeForm(shrub);
+    }
+    catch (std::exception &e)
+    {
+        std::cout << "Error: " << e.what() << std::endl;
+    }
 
-		boss.signForm(p);
-		boss.executeForm(p);
-	} catch (std::exception & e) {
-		std::cout << e.what() << std::endl;
-	}
+    try
+    {
+        Bureaucrat bob("Bob", 40);
+        RobotomyRequestForm robot("Bender");
+        bob.signForm(robot);
+        bob.executeForm(robot);
+    }
+    catch (std::exception &e)
+    {
+        std::cout << "Error: " << e.what() << std::endl;
+    }
 
-	try {
-		Bureaucrat lowly("Lowly", 150);
-		PresidentialPardonForm p("Ford");
-		lowly.signForm(p);
-	} catch (std::exception & e) {
-		std::cout << e.what() << std::endl;
-	}
+    try
+    {
+        Bureaucrat charlie("Charlie", 1);
+        PresidentialPardonForm pardon("Nixon");
+        charlie.signForm(pardon);
+        charlie.executeForm(pardon);
+    }
+    catch (std::exception &e)
+    {
+        std::cout << "Error: " << e.what() << std::endl;
+    }
 
-	return 0;
+    return (0);
 }

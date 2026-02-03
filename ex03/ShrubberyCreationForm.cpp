@@ -1,38 +1,42 @@
 #include "ShrubberyCreationForm.hpp"
+#include "Bureaucrat.hpp"
 #include <fstream>
 
-ShrubberyCreationForm::ShrubberyCreationForm()
-	: AForm("shrubbery creation", 145, 137), _target("default") {}
-
 ShrubberyCreationForm::ShrubberyCreationForm(const std::string& target)
-	: AForm("shrubbery creation", 145, 137), _target(target) {}
-
-ShrubberyCreationForm::ShrubberyCreationForm(const ShrubberyCreationForm& other)
-	: AForm(other), _target(other._target) {}
-
-ShrubberyCreationForm& ShrubberyCreationForm::operator=(const ShrubberyCreationForm& other)
+	: AForm("ShrubberyCreationForm", 145, 137), _target(target)
 {
-	if (this != &other) {
-		AForm::operator=(other);
-		_target = other._target;
+}
+
+ShrubberyCreationForm::~ShrubberyCreationForm()
+{
+}
+
+ShrubberyCreationForm::ShrubberyCreationForm(const ShrubberyCreationForm& toCopy)
+	: AForm(toCopy), _target(toCopy._target)
+{
+}
+
+ShrubberyCreationForm& ShrubberyCreationForm::operator=(const ShrubberyCreationForm& toAssign)
+{
+	if (this != &toAssign)
+	{
+		AForm::operator=(toAssign);
 	}
 	return *this;
 }
 
-ShrubberyCreationForm::~ShrubberyCreationForm() {}
-
-void ShrubberyCreationForm::executeAction() const
+void ShrubberyCreationForm::execute(const Bureaucrat& executor) const
 {
-	std::string filename = _target + "_shrubbery";
-	std::ofstream ofs(filename.c_str());
-
-	ofs << "       ###\n";
-	ofs << "      #o###\n";
-	ofs << "    #####o###\n";
-	ofs << "   #o#\\#|#/###\n";
-	ofs << "    ###\\|/#o#\n";
-	ofs << "     # }|{  #\n";
-	ofs << "       }|{\n";
-
-	ofs.close();
+	if (!this->isSigned())
+		throw AForm::FormNotSignedException();
+	if (executor.getGrade() > this->getGradeToExec())
+		throw AForm::GradeTooLowException();
+	std::ofstream file((_target + "_shrubbery").c_str());
+	file << "    *" << std::endl;
+	file << "   ***" << std::endl;
+	file << "  *****" << std::endl;
+	file << " *******" << std::endl;
+	file << "*********" << std::endl;
+	file << "   |||" << std::endl;
+	file.close();
 }

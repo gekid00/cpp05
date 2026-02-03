@@ -1,33 +1,39 @@
 #include "RobotomyRequestForm.hpp"
+#include "Bureaucrat.hpp"
 #include <cstdlib>
-#include <ctime>
-
-RobotomyRequestForm::RobotomyRequestForm()
-	: AForm("robotomy request", 72, 45), _target("default") {}
 
 RobotomyRequestForm::RobotomyRequestForm(const std::string& target)
-	: AForm("robotomy request", 72, 45), _target(target) {}
-
-RobotomyRequestForm::RobotomyRequestForm(const RobotomyRequestForm& other)
-	: AForm(other), _target(other._target) {}
-
-RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm& other)
+	: AForm("RobotomyRequestForm", 72, 45), _target(target)
 {
-	if (this != &other) {
-		AForm::operator=(other);
-		_target = other._target;
+}
+
+RobotomyRequestForm::~RobotomyRequestForm()
+{
+}
+
+RobotomyRequestForm::RobotomyRequestForm(const RobotomyRequestForm& toCopy)
+	: AForm(toCopy), _target(toCopy._target)
+{
+}
+
+RobotomyRequestForm& RobotomyRequestForm::operator=(const RobotomyRequestForm& toAssign)
+{
+	if (this != &toAssign)
+	{
+		AForm::operator=(toAssign);
 	}
 	return *this;
 }
 
-RobotomyRequestForm::~RobotomyRequestForm() {}
-
-void RobotomyRequestForm::executeAction() const
+void RobotomyRequestForm::execute(const Bureaucrat& executor) const
 {
-	std::cout << "* drilling noises *" << std::endl;
-	std::srand(std::time(NULL));
-	if (std::rand() % 2)
-		std::cout << _target << " has been robotomized" << std::endl;
+	if (!this->isSigned())
+		throw AForm::FormNotSignedException();
+	if (executor.getGrade() > this->getGradeToExec())
+		throw AForm::GradeTooLowException();
+	std::cout << "Drrrr... Whirrrr..." << std::endl;
+	if (rand() % 2)
+		std::cout << _target << " has been robotomized successfully" << std::endl;
 	else
-		std::cout << "robotomy failed" << std::endl;
+		std::cout << _target << " robotomy failed" << std::endl;
 }
